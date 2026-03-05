@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function index(Request $request) {
-        // Filtros básicos [cite: 25]
+    public function index(Request $request) {        
         $query = Order::with('client');
 
         if ($request->has('status')) {
@@ -31,14 +30,13 @@ class OrderController extends Controller
         $order = Order::create($validated);
         return response()->json($order, 201);
     }
-
-    // Método para estadísticas del Dashboard [cite: 29]
+    
     public function stats() {
         return response()->json([
             'total_orders' => Order::count(),
             'completed_orders' => Order::where('status', 'Completed')->count(),
             'pending_orders' => Order::where('status', 'Pending')->count(),
-            'active_clients' => \App\Models\Client::has('orders')->count() // Clientes con al menos 1 pedido
+            'active_clients' => \App\Models\Client::has('orders')->count()
         ]);
     }
 }

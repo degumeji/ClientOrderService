@@ -1,66 +1,262 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Aquí tienes un **README.md** propuesto para tu proyecto basado en el código analizado:
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
 
-## About Laravel
+# 📦 API de Gestión de Clientes y Órdenes
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📌 Descripción
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Esta aplicación es una **API REST desarrollada en Laravel 9** que permite gestionar:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* 👤 Clientes
+* 🛒 Órdenes
+* 📊 Estadísticas de órdenes (dashboard)
+* 🔐 Autenticación mediante JWT (JSON Web Token)
 
-## Learning Laravel
+La API protege sus endpoints utilizando un middleware personalizado `jwt.auth`, lo que significa que todas las rutas requieren un token válido enviado en el header:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```
+Authorization: Bearer {token}
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🏗️ Tecnologías Utilizadas
 
-## Laravel Sponsors
+* PHP 8.0+
+* Laravel 9
+* JWT (`firebase/php-jwt`)
+* Sanctum (instalado)
+* Guzzle HTTP
+* PHPUnit (pruebas)
+* Vite (frontend assets si aplica)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+---
 
-### Premium Partners
+## 📁 Estructura Principal
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```
+app/
+ └── Http/Controllers/
+      ├── ClientController.php
+      └── OrderController.php
 
-## Contributing
+routes/
+ └── api.php
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🔐 Autenticación
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Todas las rutas están protegidas por:
 
-## Security Vulnerabilities
+```php
+Route::middleware(['jwt.auth'])->group(function () {
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Esto significa que debes enviar un token JWT válido en cada petición.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🚀 Endpoints Disponibles
+
+### 📌 Clientes
+
+| Método | Endpoint            | Descripción        |
+| ------ | ------------------- | ------------------ |
+| GET    | `/api/clients`      | Listar clientes    |
+| POST   | `/api/clients`      | Crear cliente      |
+| PUT    | `/api/clients/{id}` | Actualizar cliente |
+| DELETE | `/api/clients/{id}` | Eliminar cliente   |
+
+### 📌 Órdenes
+
+| Método | Endpoint           | Descripción      |
+| ------ | ------------------ | ---------------- |
+| GET    | `/api/orders`      | Listar órdenes   |
+| POST   | `/api/orders`      | Crear orden      |
+| PUT    | `/api/orders/{id}` | Actualizar orden |
+| DELETE | `/api/orders/{id}` | Eliminar orden   |
+
+### 📊 Dashboard
+
+```
+GET /api/dashboard/stats
+```
+
+Devuelve estadísticas relacionadas con órdenes.
+
+### 🔎 Validar Token
+
+```
+GET /api/check-token
+```
+
+Devuelve información básica del header del JWT enviado.
+
+---
+
+# ⚙️ Instalación
+
+## 1️⃣ Clonar el repositorio
+
+```bash
+git clone <url-del-repositorio>
+cd nombre-del-proyecto
+```
+
+---
+
+## 2️⃣ Instalar dependencias PHP
+
+```bash
+composer install
+```
+
+Si tienes problemas con composer en Windows, asegúrate de que esté agregado al PATH.
+
+---
+
+## 3️⃣ Configurar variables de entorno
+
+Copia el archivo `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+Configura la base de datos en el archivo `.env`:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nombre_db
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+(O ajusta según uses SQL Server, PostgreSQL, etc.)
+
+---
+
+## 4️⃣ Generar clave de la aplicación
+
+```bash
+php artisan key:generate
+```
+
+---
+
+## 5️⃣ Ejecutar migraciones
+
+```bash
+php artisan migrate
+```
+
+Si necesitas datos de prueba:
+
+```bash
+php artisan db:seed
+```
+
+---
+
+## 6️⃣ Levantar el servidor
+
+```bash
+php artisan serve
+```
+
+La API estará disponible en:
+
+```
+http://localhost:8000
+```
+
+---
+
+# 🐳 Ejecutar con Docker (Opcional)
+
+Si deseas usar Laravel Sail:
+
+```bash
+./vendor/bin/sail up
+```
+
+O si usas Docker manualmente, asegúrate de tener:
+
+* PHP
+* Base de datos
+* Composer
+
+---
+
+# 🧪 Ejecutar Pruebas
+
+```bash
+php artisan test
+```
+
+o
+
+```bash
+./vendor/bin/phpunit
+```
+
+---
+
+# 📬 Ejemplo de Petición con Postman
+
+### Crear Cliente
+
+**POST**
+
+```
+http://localhost:8000/api/clients
+```
+
+Headers:
+
+```
+Authorization: Bearer TU_TOKEN
+Content-Type: application/json
+```
+
+Body:
+
+```json
+{
+  "firstName": "Juan",
+  "lastName": "Perez",
+  "email": "juan@email.com",
+  "phone": "0999999999"
+}
+```
+
+---
+
+# 🛡️ Seguridad
+
+* Todas las rutas están protegidas por JWT.
+* Validación de datos en creación de clientes.
+* Emails únicos en la base de datos.
+
+---
+
+# 📈 Posibles Mejoras Futuras
+
+* Implementar Swagger para documentación
+* Agregar pruebas de integración
+* Dockerizar completamente el entorno
+* Implementar refresh tokens
+* Agregar roles y permisos
+
+---
+
+# 👨‍💻 Autor
+
+Proyecto desarrollado como API REST para gestión de clientes y órdenes con autenticación JWT en Laravel.
+
+---
